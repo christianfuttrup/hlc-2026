@@ -1,0 +1,41 @@
+name: Refresh registration board
+
+# Reads the Google Sheet and writes the current numbers into docs/index.html.
+# The sheet URL lives in the SHEET_CSV_URL secret, never in this repository.
+
+on:
+  schedule:
+    # every 3 hours (UTC). GitHub may run scheduled jobs a few minutes late.
+    - cron: "17 */3 * * *"
+  workflow_dispatch:          # lets you run it on demand from the Actions tab
+
+permissions:
+  contents: write             # needed to commit the refreshed numbers
+
+concurrency:
+  group: refresh-board
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read sheet and update the board
+        env:
+          SHEET_CSV_URL: ${{ secrets.SHEET_CSV_URL }}
+        run: python3 scripts/refresh_board.py
+
+      - name: Commit if the numbers changed
+        run: |
+          if [ -n "$(git status --porcelain docs/index.html)" ]; then
+            git config user.name  "hlc-board-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add docs/index.html
+            git commit -m "Refresh registration numbers"
+            git push
+            echo "Board updated."
+          else
+            echo "No change since the last run."
+          fi
