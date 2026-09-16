@@ -126,10 +126,10 @@
 
 <main>
   <section class="hero">
-    <div class="label">Registered</div>
+    <div class="label">Attending</div>
     <div class="figure num" id="figTotal">—</div>
     <div class="keel"></div>
-    <div class="sub">colleagues signed up so far</div>
+    <div class="sub" id="heroSub">&nbsp;</div>
   </section>
 
   <section class="tile">
@@ -172,7 +172,7 @@
    The sheet must stay shared "Anyone with the link — Viewer".
    ================================================================ */
 /* ===== DATA — rewritten by the GitHub Action; keep on ONE line ===== */
-const DATA = {"total":78,"dinnerYes":59,"overnightYes":42,"updated":"16 Sep 2026, 10:20"};
+const DATA = {"attending":68,"responses":80,"dinnerYes":59,"overnightYes":42,"updated":"16 Sep 2026, 11:02"};
 /* ===== END DATA ===== */
 
 const EVENT_NAME = "HLC Event 2026";
@@ -202,13 +202,18 @@ function paint(m){
   $("ctaNote").textContent = CTA_NOTE;
   $("ctaHelp").textContent = CTA_HELP;
 
-  $("figTotal").textContent   = m.total;
+  /* `attending` = said YES to the mandatory part. `responses` = everyone who
+     replied, including the ones who said no. The headline is attendees; the
+     no-replies are shown underneath rather than silently folded in. */
+  const declined = Math.max(0, m.responses - m.attending);
+  $("figTotal").textContent   = m.attending;
+  $("heroSub").textContent    = "of " + m.responses + " replies — " + declined + " not attending";
   $("figDinner").textContent  = m.dinnerYes;
   $("figOver").textContent    = m.overnightYes;
-  $("unitDinner").textContent = "of " + m.total;
-  $("unitOver").textContent   = "of " + m.total;
-  $("barDinner").style.width  = pct(m.dinnerYes, m.total) + "%";
-  $("barOver").style.width    = pct(m.overnightYes, m.total) + "%";
+  $("unitDinner").textContent = "of " + m.attending;
+  $("unitOver").textContent   = "of " + m.attending;
+  $("barDinner").style.width  = pct(m.dinnerYes, m.attending) + "%";
+  $("barOver").style.width    = pct(m.overnightYes, m.attending) + "%";
 
   const d = daysToDeadline();
   if(d > 0){ $("figDays").textContent = d; $("unitDays").textContent = d === 1 ? "day left" : "days left"; }
