@@ -205,9 +205,8 @@ function paint(m){
   /* `attending` = said YES to the mandatory part. `responses` = everyone who
      replied, including the ones who said no. The headline is attendees; the
      no-replies are shown underneath rather than silently folded in. */
-  const declined = Math.max(0, m.responses - m.attending);
   $("figTotal").textContent   = m.attending;
-  $("heroSub").textContent    = "of " + m.responses + " replies — " + declined + " not attending";
+  $("heroSub").textContent    = "of " + m.responses + " replies";
   $("figDinner").textContent  = m.dinnerYes;
   $("figOver").textContent    = m.overnightYes;
   $("unitDinner").textContent = "of " + m.attending;
