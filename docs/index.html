@@ -44,8 +44,7 @@
   .evt .when{margin-top:.35em; color:var(--cyan); font-weight:600; font-size:clamp(12px,1.45vw,27px);}
   .stamp{text-align:right; color:var(--ink-3); font-size:clamp(10px,.95vw,17px); line-height:1.5; margin-left:auto;}
   .stamp b{display:block; font-weight:600;}
-  .stamp b.live{color:var(--cyan);}
-  .stamp b.snap{color:var(--ink-3);}
+  .stamp b.status{color:var(--ink-3);}
 
   main{
     flex:1 1 auto; display:grid; gap:clamp(12px,1.9vh,26px) clamp(12px,1.9vw,30px);
@@ -119,7 +118,7 @@
     </div>
   </div>
   <div class="stamp">
-    <b id="badge" class="snap">● Loading</b>
+    <b id="badge" class="status">Updated</b>
     <span id="stampText">reading the sheet…</span>
   </div>
 </header>
@@ -221,9 +220,9 @@ function paint(m){
 }
 
 paint(DATA);
-$("badge").className = "live";
-$("badge").textContent = "\u25cf Live";
-$("stampText").textContent = "updated " + DATA.updated;
+$("badge").className = "status";
+$("badge").textContent = "Updated";
+$("stampText").textContent = "last refresh: " + DATA.updated;
 
 /* keep the countdown rolling over on a screen that stays up for weeks */
 setInterval(() => paint(DATA), 30 * 60000);
